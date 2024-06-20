@@ -1,0 +1,11 @@
+include:
+  - local: ".gitlab/release.yml"
+  - local: ".gitlab/modules.yml"
+
+stages:
+  - build
+  - release
+
+variables:
+  BREW_VERSION: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  GPG_SIGNING_KEY: $GPG_SIGNING_KEY

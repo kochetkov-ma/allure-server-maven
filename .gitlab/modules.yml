@@ -1,0 +1,2 @@
+.version_tag:
+  /^v\d+.\d+.\d+$/

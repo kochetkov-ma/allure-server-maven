@@ -1,0 +1,69 @@
+#######################
+###### TEMPLATES ######
+
+.gradle:build:
+  image: $CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX/gradle:7.5.1-jdk17
+  stage: build
+  needs: [ ]
+  cache:
+    key: gradle
+    paths:
+      - $CI_PROJECT_PATH/.gradle/
+    when: always   
+  script:
+    - gradle -g $CI_PROJECT_PATH/.gradle/ --no-daemon -Pversion=$BREW_VERSION -i -s
+  artifacts:
+    expire_in: 10 minutes
+    paths:
+      - build/
+    reports:
+      junit:
+        - build/test-results/test/TEST-*.xml
+  variables:
+    BREW_VERSION: $CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  only:
+    refs:
+      - master
+      - merge_requests
+      - !reference [.version_tag]
+
+.gradle:release:
+  image: $CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX/gradle:7.5.1-jdk17
+  stage: release
+  cache:
+    key: gradle
+    paths:
+      - $CI_PROJECT_PATH/.gradle/
+    when: always
+  before_script:
+    - echo "Tag is $CI_COMMIT_TAG"
+    - BREW_VERSION=${CI_COMMIT_TAG#v}
+    - echo "Publication version is $BREW_VERSION"
+  script:
+    - >
+      gradle -g $CI_PROJECT_PATH/.gradle/ --no-daemon -i -s --build-cache
+      -Pversion=$BREW_VERSION
+      -Psigning.password=$GPG_SIGNING_PASSWORD
+      -PossrhUsername=$OSSRH_USERNAME
+      -PossrhPassword=$OSSRH_PASSWORD
+      publish closeAndReleaseRepository
+  artifacts:
+    expire_in: 30 minutes
+    paths:
+      - build/libs/*.jar
+  only:
+    refs:
+      - !reference [.version_tag]
+
+##################
+###### JOBS ######
+allure-server-maven:build:
+  extends:
+    - .gradle:build
+
+allure-server-maven:release:
+  extends:
+    - .gradle:release
+  needs:
+    - job: allure-server-maven:build
+      artifacts: true
