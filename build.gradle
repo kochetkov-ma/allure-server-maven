@@ -10,6 +10,8 @@ plugins {
     id 'de.benediktritter.maven-plugin-development' version "$mavenPluginDevelopmentVersion"
 }
 
+description = 'Allure-Server plugin for Maven'
+
 apply from: "$rootDir/gradle/publishing.gradle"
 
 repositories { mavenLocal(); mavenCentral() }

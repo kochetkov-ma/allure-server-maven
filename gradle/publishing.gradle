@@ -39,7 +39,7 @@ publishing {
             pom {
                 name = project.name
                 description = project.description
-                url = 'https://gitlab.com/brewcode/selenide-pages'
+                url = 'https://gitlab.com/brewcode/allure-server-maven'
 
                 packaging 'jar'
 
@@ -62,9 +62,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'https://gitlab.com/brewcode/selenide-pages.git'
-                    developerConnection = 'https://gitlab.com/brewcode/selenide-pages.git'
-                    url = 'https://gitlab.com/brewcode/selenide-pages'
+                    connection = 'https://gitlab.com/brewcode/allure-server-maven.git'
+                    developerConnection = 'https://gitlab.com/brewcode/allure-server-maven.git'
+                    url = 'https://gitlab.com/brewcode/allure-server-maven'
                 }
             }
         }
