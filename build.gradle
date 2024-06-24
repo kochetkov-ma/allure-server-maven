@@ -12,6 +12,27 @@ apply from: "$rootDir/gradle/publishing.gradle"
 
 repositories { mavenLocal(); mavenCentral() }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+mavenPlugin {
+    helpMojoPackage = "${project.group}.help"
+}
+
+test { useJUnitPlatform() }
+
+dependencies {
+    implementation 'org.apache.maven:maven-plugin-api:3.9.8'
+    implementation 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1'
+    implementation 'org.apache.maven:maven-project:2.2.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+    // junit5
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+}
+
 idea { module { downloadJavadoc = true; downloadSources = true } }
 
 wrapper { distributionType = Wrapper.DistributionType.BIN; gradleVersion = gradleWrapperVersion }

@@ -41,3 +41,5 @@ allure-results/
 
 # Private
 .gpg/
+
+*.txt
