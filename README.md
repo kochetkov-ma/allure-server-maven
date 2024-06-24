@@ -3,6 +3,7 @@ Maven plugin for Allure-Server
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/kochetkov-ma/allure-server-maven)
 
+![Maven Central Version](https://img.shields.io/maven-central/v/org.brewcode.allure/allure-server-maven)
 
 This plugin allows you to deploy Allure reports to Allure-Server.
 
