@@ -1,3 +1,5 @@
+import java.time.Duration
+
 plugins {
     id 'java'
     id 'idea'
@@ -42,9 +44,11 @@ nexusPublishing {
 
     repositories {
         sonatype {
-            stagingProfileId = "5dddd2a914d889"
-            username = project.findProperty('ossrhUsername') ?: ''
-            password = project.findProperty('ossrhPassword') ?: ''
+            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
+            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            stagingProfileId = project.findProperty('stagingProfileId') ?: System.getenv('OSSRH_PROFILE_ID') ?: ''
+            username = project.findProperty('ossrhUsername') ?: System.getenv('OSSRH_USERNAME') ?: ''
+            password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD') ?: ''
         }
     }
 

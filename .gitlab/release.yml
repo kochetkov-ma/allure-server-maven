@@ -46,7 +46,7 @@
       -Psigning.password=$GPG_SIGNING_PASSWORD
       -PossrhUsername=$OSSRH_USERNAME
       -PossrhPassword=$OSSRH_PASSWORD
-      publish closeAndReleaseRepository
+      publishToSonatype closeAndReleaseRepository
   artifacts:
     expire_in: 30 minutes
     paths:
