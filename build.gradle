@@ -44,19 +44,20 @@ nexusPublishing {
 
     String profile = project.findProperty('stagingProfileId') ?: System.getenv('OSSRH_PROFILE_ID') ?: ''
     String user = project.findProperty('ossrhUsername') ?: System.getenv('OSSRH_USERNAME') ?: ''
-    String password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD') ?: ''
+    String pass = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD') ?: ''
 
     println(" > > > stagingProfileId: $profile")
     println(" > > > user: $user")
-    println(" > > > password: ${password.isBlank() ? 'blank' : 'not_blank'}")
+    println(" > > > password: ${pass.isBlank() ? 'blank' : 'not_blank'}")
 
     repositories {
         sonatype {
             nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
             snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            
             stagingProfileId = profile
             username = user
-            password = project.findProperty('ossrhPassword') ?: System.getenv('OSSRH_PASSWORD') ?: ''
+            password = pass
         }
     }
 
