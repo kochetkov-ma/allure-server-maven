@@ -10,6 +10,7 @@ This plugin allows you to deploy Allure reports to Allure-Server.
 - [allure-server](https://github.com/kochetkov-ma/allure-server)
 
 Also, there is Gradle Plugin:
+
 - [allure-server-gradle](https://github.com/kochetkov-ma/allure-server-gradle)
 
 Дополненная инструкция по использованию Maven плагина для генерации отчетов Allure, включая информацию о GitLab Callback:
@@ -59,6 +60,44 @@ The `allure-server-generate` Maven plugin facilitates the generation and upload 
     - **`giLabCallback`**: Enable GitLab Callback for automatic comment addition to Merge Requests (ensure GitLab environment variables are set).
     - **`folderName`**: Name of the folder containing Allure results.
     - **`outputPath`**: Path to output the archive of Allure results.
+
+3. **Allure PATH build**
+
+   When generating a report, it is necessary to set the `path`, which is the location where all reports will be saved. Reports with the same path will be merged into a single history. Therefore, for project X on the `Main` branch, all reports must have the same path to ensure they are combined into one history. Setting the path is a crucial step, and environment variables can be used for this purpose.
+
+   #### Environment Variables
+
+    - `PATH_PREFIX`: Prefix for the report path.
+    - `PATH_POSTFIX`: Postfix for the report path.
+    - `CI_PIPELINE_ID`: Pipeline ID. Defaults to "0" if not set.
+    - `CI_PIPELINE_URL`: Pipeline URL. Defaults to "localhost" if not set.
+    - `CI_JOB_NAME`: Job name. Defaults to "manual" if not set.
+    - `CI_MERGE_REQUEST_IID`: Merge request ID.
+    - `CI_COMMIT_REF_NAME`: Branch name. Defaults to "master" if not set.
+
+   #### Example Usage
+
+   Here is how the report path is constructed based on different environment variable settings:
+
+    - **With Merge Request ID**:
+      ```plaintext
+      PATH_PREFIX: /reports
+      CI_MERGE_REQUEST_IID: 123
+      CI_JOB_NAME: build
+      PATH_POSTFIX: v1
+      ```
+      Resulting path: `/reports/123/build/v1`
+
+    - **Without Merge Request ID**:
+      ```plaintext
+      PATH_PREFIX: /reports
+      CI_COMMIT_REF_NAME: feature-branch
+      CI_JOB_NAME: build
+      PATH_POSTFIX: v1
+      ```
+      Resulting path: `/reports/feature-branch/build/v1`
+
+   Ensure that all reports for project X that need to be merged into one history have the same path by appropriately setting the environment variables.
 
 ### Configuration Options
 
@@ -137,6 +176,7 @@ GitLab Callback automatically adds comments to GitLab Merge Requests with links 
 ### Example Configuration in pom.xml
 
 ```xml
+
 <build>
     <plugins>
         <plugin>
