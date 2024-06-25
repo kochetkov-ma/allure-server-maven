@@ -23,7 +23,7 @@ class Requests {
         var path = new StringBuilder();
 
         if (reportPrefix != null)
-            path.append(reportPrefix);
+            path.append(reportPrefix).append("/");
 
         if (mr != null)
             path.append(mr.trim());
