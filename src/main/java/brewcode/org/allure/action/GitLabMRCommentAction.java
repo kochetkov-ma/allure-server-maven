@@ -5,6 +5,7 @@ import org.apache.maven.plugin.logging.Log;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -46,19 +47,24 @@ public class GitLabMRCommentAction {
             return;
         }
 
-        var gitLabUrl = gitLabApiUrl + "/projects/" + gitLabProjectId + "/merge_requests/" + gitLabMergeRequestId + "/notes";
+        var gitLabUrl = gitLabApiUrl + "/projects/" + gitLabProjectId + "/merge_requests/" + gitLabMergeRequestId + "/notes"
+            + "?body=" + URLEncoder.encode("ALLURE REPORT: " + reportUrl);
 
         var request = HttpRequest.newBuilder()
             .uri(URI.create(gitLabUrl))
+            .POST(HttpRequest.BodyPublishers.noBody())
             .header("Content-Type", "application/json")
-            .header("Private-Token", gitLabToken)
-            .POST(HttpRequest.BodyPublishers.ofString("ALLURE REPORT: " + reportUrl))
+            .header("PRIVATE-TOKEN", gitLabToken)
             .build();
 
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            log.info("GitLab response: " + response.statusCode());
-            log.info("Report URL successfully sent to GitLab Merge Request.");
+            log.info("GitLab response: " + response + " - " + response.body());
+            
+            if (response.statusCode() == 201)
+                log.info("Report URL successfully sent to GitLab Merge Request: " + gitLabUrl);
+            else
+                log.error("Cannot create comment in GitLab MR: " + request);
         } catch (IOException | InterruptedException e) {
             throw new MojoExecutionException("Failed to send report URL to GitLab Merge Request", e);
         }

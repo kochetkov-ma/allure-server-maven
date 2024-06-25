@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-class Utilities {
+public class Utilities {
     private Utilities() throws NoSuchAlgorithmException {
         throw new IllegalStateException("Utility class");
     }
